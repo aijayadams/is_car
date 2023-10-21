@@ -35,12 +35,24 @@ def cli():
 
 def run_detect(args):
     while True:
-        detect(show=args.show)
+        detect(model_setup(), show=args.show)
         if args.runonce:
             break
 
 
-def detect(show=False):
+def model_setup():
+    # Load the pre-trained Faster R-CNN model
+    model = detection.fasterrcnn_resnet50_fpn(
+        weights=detection.FasterRCNN_ResNet50_FPN_Weights.DEFAULT
+    )
+    # Run on GPU if cuda is available
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print(f"Moving model to {device}")
+    model.to(device)
+    return model
+
+
+def detect(model, show=False):
     result = {}
 
     cameras = {
@@ -60,11 +72,6 @@ def detect(show=False):
     }
 
     URL = "http://{camera}/snap.jpeg"
-    # Load the pre-trained Faster R-CNN model
-    model = detection.fasterrcnn_resnet50_fpn(
-        weights=detection.FasterRCNN_ResNet50_FPN_Weights.DEFAULT
-    )
-    # model = detection.fasterrcnn_resnet50_fpn(weights='`weights=FasterRCNN_ResNet50_FPN_Weights.DEFAULT`')
 
     model.eval()
 
@@ -136,6 +143,7 @@ class AppMetrics:
         # Prometheus metrics to collect
         self.crest_south = Gauge("crest_south", "Car Detected on Crest South")
         self.crest_north = Gauge("crest_north", "Car Detected on Crest North")
+        self.detection_model = model_setup()
 
     def run_metrics_loop(self):
         """Metrics fetching loop"""
@@ -149,7 +157,7 @@ class AppMetrics:
         new values.
         """
 
-        results = detect()
+        results = detect(self.detection_model)
 
         self.crest_south.set(results["crest_south"])
         self.crest_north.set(results["crest_north"])
