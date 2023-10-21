@@ -104,6 +104,12 @@ def detect(model, show=False):
         with torch.no_grad():
             prediction = model(image_tensor)
 
+
+        # Bring any detections back to Host Memory
+        prediction = prediction.to("cpu")
+
+        # Bring any detections back to Host Memory
+         
         # Draw bounding boxes for detected cars
 
         pil_image_rgb = image.convert("RGB")
