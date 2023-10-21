@@ -1,0 +1,9 @@
+setup.py
+car_detected_prom_exporter/__init__.py
+car_detected_prom_exporter/__main__.py
+car_detected_prom_exporter/is_car.py
+car_detected_prom_exporter.egg-info/PKG-INFO
+car_detected_prom_exporter.egg-info/SOURCES.txt
+car_detected_prom_exporter.egg-info/dependency_links.txt
+car_detected_prom_exporter.egg-info/requires.txt
+car_detected_prom_exporter.egg-info/top_level.txt

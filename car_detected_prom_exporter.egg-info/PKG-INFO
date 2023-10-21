@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: car-detected-prom-exporter
+Version: 0.1
+Requires-Dist: torch
+Requires-Dist: torchvision
+Requires-Dist: opencv-python
+Requires-Dist: prometheus_client

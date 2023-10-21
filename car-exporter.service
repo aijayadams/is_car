@@ -1,0 +1,14 @@
+[Unit]
+Description=Car Exporter
+Requires=network-online.service
+After=network-online.service
+
+[Service]
+Type=simple
+ExecStartPre=source /opt/car-detected-venv/bin/activate
+ExecStart=python -m car_detected_prom_exporter --serve
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
