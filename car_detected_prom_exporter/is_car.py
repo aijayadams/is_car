@@ -49,6 +49,8 @@ def model_setup():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(f"Moving model to {device}")
     model.to(device)
+    model.eval()
+
     return model
 
 
@@ -73,7 +75,6 @@ def detect(model, show=False):
 
     URL = "http://{camera}/snap.jpeg"
 
-    model.eval()
 
     for camera, params in cameras.items():
         # Load an image and transform
@@ -91,11 +92,14 @@ def detect(model, show=False):
         for m in params["masks"]:
             draw.rectangle([m[0], m[1], m[2], m[3]], fill=(0, 0, 0))
 
-        # image.show()
 
         transform = transforms.Compose([transforms.ToTensor()])
         image_tensor = transform(image).unsqueeze(0)
 
+        # Ensure the input tensor is in the same place as the model
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        image_tensor = image_tensor.to(device)
+        
         # Detect objects in the image
         with torch.no_grad():
             prediction = model(image_tensor)
