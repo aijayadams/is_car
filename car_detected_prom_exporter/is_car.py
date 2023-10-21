@@ -104,10 +104,6 @@ def detect(model, show=False):
         with torch.no_grad():
             prediction = model(image_tensor)
 
-
-        # Bring any detections back to Host Memory
-        prediction = prediction.to("cpu")
-
         # Bring any detections back to Host Memory
          
         # Draw bounding boxes for detected cars
@@ -123,7 +119,7 @@ def detect(model, show=False):
             if (
                 label == 3 and score > 0.5
             ):  # 3 is the label for cars in COCO, and we consider detections with confidence > 0.5
-                box = box.numpy().astype(int)
+                box = box.cpu().numpy().astype(int)
                 print(box)
                 cv2.rectangle(
                     image_np, (box[0], box[1]), (box[2], box[3]), (255, 0, 0), 2
