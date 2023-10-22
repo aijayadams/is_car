@@ -124,7 +124,7 @@ def detect(model, show=False):
                 cv2.rectangle(
                     image_np, (box[0], box[1]), (box[2], box[3]), (255, 0, 0), 2
                 )
-                car_detected = 1
+                car_detected += 1
 
         if show:
             cv2.imshow("Detected Cars", image_np)
